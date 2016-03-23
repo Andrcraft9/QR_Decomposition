@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1443004809 source:/home/andr/INM_RAS/QRprog/QRdecomposition/main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<time.h>
+	<getopt.h>
+
