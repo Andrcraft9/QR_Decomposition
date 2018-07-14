@@ -9,102 +9,102 @@ typedef double** matrix;
 
 matrix create(size_t m, size_t n)
 {
-	matrix mat;
+    matrix mat;
 
-	mat = malloc(m * sizeof(double*));
-	for(size_t i = 0; i < m; ++i)
-	{
-		mat[i] = malloc(n * sizeof(double));
-		for(size_t j = 0; j < n; ++j)
-			mat[i][j] = 0;
-	}
+    mat = malloc(m * sizeof(double*));
+    for(size_t i = 0; i < m; ++i)
+    {
+        mat[i] = malloc(n * sizeof(double));
+        for(size_t j = 0; j < n; ++j)
+            mat[i][j] = 0;
+    }
 
-	return mat;
+    return mat;
 }
 
 
 matrix scan_matrix(size_t m, size_t n)
 {
-	matrix mat;
+    matrix mat;
 
-	mat = malloc(m * sizeof(double*));
-	for(size_t i = 0; i < m; ++i)
-	{
-		mat[i] = malloc(n * sizeof(double));
-		for(size_t j = 0; j < n; ++j)
-		{
-			double d;
-			if (scanf("%lf", &d) != 1)
+    mat = malloc(m * sizeof(double*));
+    for(size_t i = 0; i < m; ++i)
+    {
+        mat[i] = malloc(n * sizeof(double));
+        for(size_t j = 0; j < n; ++j)
+        {
+            double d;
+            if (scanf("%lf", &d) != 1)
                 exit(1);
-			mat[i][j] = d;
-		}
-	}
+            mat[i][j] = d;
+        }
+    }
 
-	return mat;
+    return mat;
 }
 
 matrix create_rand_matrix(size_t m, size_t n)
 {
-	matrix mat;
+    matrix mat;
 
     srand(time(0));
 
-	mat = malloc(m * sizeof(double*));
-	for(size_t i = 0; i < m; ++i)
-	{
-		mat[i] = malloc(n * sizeof(double));
-		for(size_t j = 0; j < n; ++j)
-			mat[i][j] = (double) rand() / RAND_MAX;
-	}
+    mat = malloc(m * sizeof(double*));
+    for(size_t i = 0; i < m; ++i)
+    {
+        mat[i] = malloc(n * sizeof(double));
+        for(size_t j = 0; j < n; ++j)
+            mat[i][j] = (double) rand() / RAND_MAX;
+    }
 
-	return mat;
+    return mat;
 }
 
 matrix create_seq_matrix(size_t n)
 {
-	matrix mat;
-	int value = 0;
-	mat = malloc(n * sizeof(double*));
-	for(size_t i = 0; i < n; ++i)
-	{
-		mat[i] = malloc(n * sizeof(double));
-		for(size_t j = 0; j < n; ++j)
-			mat[i][j] = ++value;
-	}
+    matrix mat;
+    int value = 0;
+    mat = malloc(n * sizeof(double*));
+    for(size_t i = 0; i < n; ++i)
+    {
+        mat[i] = malloc(n * sizeof(double));
+        for(size_t j = 0; j < n; ++j)
+            mat[i][j] = ++value;
+    }
 
     return mat;
 }
 
 void print_matrix(const matrix mat, size_t m, size_t n)
 {
-	for(size_t i = 0; i < m; ++i)
-	{
-		for(size_t j = 0; j < n; ++j)
-			printf("%lf ", mat[i][j]);
-		printf("\n");
-	}
+    for(size_t i = 0; i < m; ++i)
+    {
+        for(size_t j = 0; j < n; ++j)
+            printf("%lf ", mat[i][j]);
+        printf("\n");
+    }
 }
 
 void delete_matrix(matrix mat, size_t m)
 {
-	for(size_t i = 0; i < m; ++i)
-	{
-		free(mat[i]);
-	}
-	free(mat);
+    for(size_t i = 0; i < m; ++i)
+    {
+        free(mat[i]);
+    }
+    free(mat);
 }
 
 matrix create_from(const matrix matrix1, size_t m, size_t n)
 {
     matrix matrix2;
 
- 	matrix2 = malloc(m * sizeof(double*));
-	for(size_t i = 0; i < m; ++i)
-	{
-		matrix2[i] = malloc(n * sizeof(double));
-		for(size_t j = 0; j < n; ++j)
-			matrix2[i][j] = matrix1[i][j];
-	}
+    matrix2 = malloc(m * sizeof(double*));
+    for(size_t i = 0; i < m; ++i)
+    {
+        matrix2[i] = malloc(n * sizeof(double));
+        for(size_t j = 0; j < n; ++j)
+            matrix2[i][j] = matrix1[i][j];
+    }
 
     return matrix2;
 }
@@ -113,16 +113,16 @@ matrix create_I(size_t m, size_t n)
 {
     matrix matrix2;
 
- 	matrix2 = malloc(m * sizeof(double*));
-	for(size_t i = 0; i < m; ++i)
-	{
-		matrix2[i] = malloc(n * sizeof(double));
-		for(size_t j = 0; j < n; ++j)
-			if ( i == j)
+    matrix2 = malloc(m * sizeof(double*));
+    for(size_t i = 0; i < m; ++i)
+    {
+        matrix2[i] = malloc(n * sizeof(double));
+        for(size_t j = 0; j < n; ++j)
+            if ( i == j)
                 matrix2[i][j] = 1;
             else
                 matrix2[i][j] = 0;
-	}
+    }
 
     return matrix2;
 }
@@ -154,7 +154,7 @@ matrix create_rand_bad_matrix(size_t n, size_t k)
     // Generate random Householder vector v1 and v2 and compute w = (v,v)
     double *v1, *v2;
     double w1 = 0, w2 = 0;
-	v1 = malloc(n * sizeof(double));
+    v1 = malloc(n * sizeof(double));
     v2 = malloc(n * sizeof(double));
     for (size_t i = 0; i < n; ++i)
     {
@@ -223,54 +223,54 @@ double matrix_Frobenius_norm(const matrix A, size_t m, size_t n)
 
 matrix* QRdecomposition(const matrix A, size_t N)
 {
-	matrix* QR = malloc( 2 * sizeof(matrix));
+    matrix* QR = malloc( 2 * sizeof(matrix));
 
     matrix Q, R;
-	Q = create_I(N, N);
-	R = create_from(A, N, N);
+    Q = create_I(N, N);
+    R = create_from(A, N, N);
     QR[0] = Q;
     QR[1] = R;
 
     double *vT, *vrT, *vq;
-	vT = malloc(N * sizeof(double));
+    vT = malloc(N * sizeof(double));
     vrT = malloc(N * sizeof(double));
     vq = malloc(N * sizeof(double));
 
     // A = Q*R
-	// P = I - (2/vT*v) * v*vT - householder matrix, v - householder
+    // P = I - (2/vT*v) * v*vT - householder matrix, v - householder
     // Pn*Pn-1*...*P1*A = R
     // P1*P2*...*Pn = Q
     for(size_t n = 0; n < N; ++n)
-	{
+    {
         // Compute Rn = Pn * Rn-1 and Qn = Qn-1 * PnT
 
         // Set size our vectors
-		size_t size = N - n;
+        size_t size = N - n;
 
-		// Compute Householder vector vT
-		double w1 = 0;
-		for(size_t i = 0; i < size; ++i)
+        // Compute Householder vector vT
+        double w1 = 0;
+        for(size_t i = 0; i < size; ++i)
         {
-			vT[i] = R[n+i][n];
-			w1 += vT[i] * vT[i];
-		}
-		w1 = sqrt(w1);
-		if (R[n][n] > 0)
-			vT[0] = vT[0] + w1;
-		else
-			vT[0] = vT[0] - w1;
+            vT[i] = R[n+i][n];
+            w1 += vT[i] * vT[i];
+        }
+        w1 = sqrt(w1);
+        if (R[n][n] > 0)
+            vT[0] = vT[0] + w1;
+        else
+            vT[0] = vT[0] - w1;
 
-		// Compute vrT = vT * R and compute w2 = (v, v)
-		double w2 = 0;
-		for(size_t i = 0; i < size; ++i)
-		{
-			// compute w2
+        // Compute vrT = vT * R and compute w2 = (v, v)
+        double w2 = 0;
+        for(size_t i = 0; i < size; ++i)
+        {
+            // compute w2
             w2 += vT[i] * vT[i];
 
             // compute vrT
-			vrT[i] = 0;
-			for(size_t s = 0; s < size; ++s)
-				vrT[i] += vT[s] * R[n + s][n + i];
+            vrT[i] = 0;
+            for(size_t s = 0; s < size; ++s)
+                vrT[i] += vT[s] * R[n + s][n + i];
         }
 
         //Compute vq = Q * v
@@ -281,13 +281,13 @@ matrix* QRdecomposition(const matrix A, size_t N)
                 vq[i] += Q[i][n + s] * vT[s];
         }
 
-		// Compute w2 = 2/(v, v)
-		w2 = 2.0 / w2;
+        // Compute w2 = 2/(v, v)
+        w2 = 2.0 / w2;
 
-		// Compute new R = R - w2(v * vrT)
-		for(size_t i = 0; i < size; ++i)
-			for(size_t j = 0; j < size; ++j)
-				R[n + i][n + j] = R[n + i][n + j] - w2 * vT[i] * vrT[j];
+        // Compute new R = R - w2(v * vrT)
+        for(size_t i = 0; i < size; ++i)
+            for(size_t j = 0; j < size; ++j)
+                R[n + i][n + j] = R[n + i][n + j] - w2 * vT[i] * vrT[j];
 
         // Compute new Q = Q - w2(vq * vT)
         for(size_t i = 0; i < N; ++i)
@@ -361,7 +361,7 @@ int main(int argc, char *argv[])
 
     // Set size of matrix
     size_t size;
-	if (globalArgs.size != NULL)
+    if (globalArgs.size != NULL)
         size = strtoul(globalArgs.size, NULL, 10);
     else
     {
@@ -372,10 +372,10 @@ int main(int argc, char *argv[])
     }
 
     matrix A;
-	matrix* QR;
+    matrix* QR;
 
-	// Generating matrix A
-	if (globalArgs.rand)
+    // Generating matrix A
+    if (globalArgs.rand)
     {
         A = create_rand_matrix(size, size);
     }
@@ -461,7 +461,7 @@ int main(int argc, char *argv[])
     }
 
     // Clear memory
-	delete_matrix(A, size);
+    delete_matrix(A, size);
     delete_matrix(QR[0], size);
     delete_matrix(QR[1], size);
     free(QR);
@@ -470,7 +470,7 @@ int main(int argc, char *argv[])
     if (QQT)
         delete_matrix(QQT, size);
 
-	return 0;
+    return 0;
 }
 
 

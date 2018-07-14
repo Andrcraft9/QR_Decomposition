@@ -24,7 +24,7 @@ program main
 
     call cpu_time(start)
     ! A = Q*R
-	! P = I - (2/vT*v) * v*vT - householder matrix, v - householder
+    ! P = I - (2/vT*v) * v*vT - householder matrix, v - householder
     ! Pn*Pn-1*...*P1*A = R
     ! P1*P2*...*Pn = Q
     do k = 1, n
@@ -45,21 +45,21 @@ program main
             vT(1, 1) = vT(1, 1) - w1
         endif
 
-		! Compute vrT = vT * R and compute w2 = (v, v)        
-		vrT(1 : siz, 1) = matmul(vT(1 : siz, 1), R(k : k + siz - 1, k : k + siz - 1))
+        ! Compute vrT = vT * R and compute w2 = (v, v)        
+        vrT(1 : siz, 1) = matmul(vT(1 : siz, 1), R(k : k + siz - 1, k : k + siz - 1))
         w2 = dot_product(vT(1 : siz, 1), vT(1 : siz, 1))
 
-		!Compute vq = Q * v
+        !Compute vq = Q * v
         vq(1 : n, 1) = matmul(Q(1 : n, k : k + siz - 1), vT(1 : siz, 1))
       
         ! Compute w2 = 2/(v, v)
         w2 = 2.0 / w2
 
-		! Compute new R = R - w2(v * vrT)
+        ! Compute new R = R - w2(v * vrT)
         P(k : k + siz - 1, k : k + siz - 1) = w2 * matmul(vT(1 : siz, 1 : 1), transpose(vrT(1 : siz, 1 : 1)))
         R(k : k + siz - 1, k : k + siz - 1) = R(k : k + siz - 1, k : k + siz - 1) - P(k : k + siz - 1, k : k + siz - 1)
 
-    	! Compute new Q = Q - w2(vq * vT)
+        ! Compute new Q = Q - w2(vq * vT)
         P(1 : n, k : k + siz - 1) = w2 * MATMUL(vq(1 : n, 1 : 1), transpose(vT(1 : siz, 1 : 1)))
         Q(1 : n, k : k + siz - 1) = Q(1 : n, k : k + siz - 1) - P(1 : n, k : k + siz - 1)
      

@@ -1,7 +1,7 @@
 program main
     implicit none
     ! Variables
-    integer, parameter :: n = 512
+    integer, parameter :: n = 2048
     integer*4 :: k, siz
     real*8 :: A(n, n), Q(n, n), R(n, n), P(n, n), vT(n, 1), vrT(n, 1), vq(n, 1)
     real*8 :: w1, w2
@@ -24,7 +24,7 @@ program main
 
     call cpu_time(start)
     ! A = Q*R
-	! P = I - (2/vT*v) * v*vT - householder matrix, v - householder
+    ! P = I - (2/vT*v) * v*vT - householder matrix, v - householder
     ! Pn*Pn-1*...*P1*A = R
     ! P1*P2*...*Pn = Q
     do k = 1, n
@@ -36,8 +36,15 @@ program main
         ! Compute Householder vector vT
         vT(1 : siz, 1) = R(k : k + siz - 1, k)
 
-        w1 = dot_product(vT(1 : siz, 1), vT(1 : siz, 1))
-        w1 = sqrt(w1)
+        w1 = dnrm2(siz, vT, 1)
+        !w1 = dot_product(vT(1 : siz, 1), vT(1 : siz, 1))
+        !w1 = sqrt(w1)
+
+        !do i = 1, siz
+        !    vT(i) = R(k + i - 1, k)
+        !    w1 = w1 + vT(i)**2
+        !enddo
+        !w1 = sqrt(w1)
 
         if (R(k, k) > 0) then
             vT(1, 1) = vT(1, 1) + w1
@@ -45,30 +52,67 @@ program main
             vT(1, 1) = vT(1, 1) - w1
         endif
 
-		! Compute vrT = vT * R and compute w2 = (v, v)        
-		vrT(1 : siz, 1) = matmul(vT(1 : siz, 1), R(k : k + siz - 1, k : k + siz - 1))
-        w2 = dot_product(vT(1 : siz, 1), vT(1 : siz, 1))
 
-		!Compute vq = Q * v
-        vq(1 : n, 1) = matmul(Q(1 : n, k : k + siz - 1), vT(1 : siz, 1))
-      
+        call dgemv('T', siz, siz, 1d0, R(k, k), n, vT, 1, 0d0, vrT, 1)
+        w2 = ddot(siz, vT, 1, vT, 1)
+        !vrT(1 : siz, 1) = matmul(vT(1 : siz, 1), R(k : k + siz - 1, k : k + siz - 1))
+        !w2 = dot_product(vT(1 : siz, 1), vT(1 : siz, 1))
+        ! Compute vrT = vT * R and compute w2 = (v, v)
+        !w2 = 0
+        !do i = 1, siz
+        !    ! compute w2
+        !    w2 = w2 + vT(i)**2
+        !    ! compute vrT
+        !    vrT(i) = 0
+        !    do s = 1, siz
+        !        vrT(i) = vrT(i) + vT(s) * R(k + s - 1, k + i - 1)
+        !    enddo
+        !enddo
+
+        call dgemv('N', n, siz, 1d0, Q(1, k), n, vT, 1, 0d0, vq, 1)
+        !vq(1 : n, 1) = matmul(Q(1 : n, k : k + siz - 1), vT(1 : siz, 1))
+        !Compute vq = Q * v
+        !do i = 1, n
+        !    vq(i) = 0
+        !    do s = 1, siz
+        !        vq(i) = vq(i) + Q(i, k + s - 1) * vT(s)
+        !    enddo
+        !enddo
+
         ! Compute w2 = 2/(v, v)
         w2 = 2.0 / w2
 
-		! Compute new R = R - w2(v * vrT)
-        P(k : k + siz - 1, k : k + siz - 1) = w2 * matmul(vT(1 : siz, 1 : 1), transpose(vrT(1 : siz, 1 : 1)))
-        R(k : k + siz - 1, k : k + siz - 1) = R(k : k + siz - 1, k : k + siz - 1) - P(k : k + siz - 1, k : k + siz - 1)
+        call dgemm('N', 'T', siz, siz, 1, -w2, vT, n, vrT, n, 1d0, R(k, k), n)
+        !P(k : k + siz - 1, k : k + siz - 1) = w2 * matmul(vT(1 : siz, 1 : 1), transpose(vrT(1 : siz, 1 : 1)))
+        !R(k : k + siz - 1, k : k + siz - 1) = R(k : k + siz - 1, k : k + siz - 1) - P(k : k + siz - 1, k : k + siz - 1)
+        ! Compute new R = R - w2(v * vrT)
+        !do j = 1, siz
+        !    do i = 1, siz
+        !        R(k + i - 1, k + j - 1) = R(k + i - 1, k + j - 1) - w2 * vT(i, 1) * vrT(j, 1)
+        !    enddo
+        !enddo
 
-    	! Compute new Q = Q - w2(vq * vT)
-        P(1 : n, k : k + siz - 1) = w2 * MATMUL(vq(1 : n, 1 : 1), transpose(vT(1 : siz, 1 : 1)))
-        Q(1 : n, k : k + siz - 1) = Q(1 : n, k : k + siz - 1) - P(1 : n, k : k + siz - 1)
-     
+
+        call dgemm('N', 'T', n, siz, 1, -w2, vq, n, vT, n, 1d0, Q(1, k), n)
+        !P(1 : n, k : k + siz - 1) = w2 * MATMUL(vq(1 : n, 1 : 1), transpose(vT(1 : siz, 1 : 1)))
+        !Q(1 : n, k : k + siz - 1) = Q(1 : n, k : k + siz - 1) - P(1 : n, k : k + siz - 1)
+        ! Compute new Q = Q - w2(vq * vT)
+        !do j = 1, siz
+        !    do i = 1, n
+        !        Q(i, k + j - 1) = Q(i, k + j - 1) - w2 * vq(i, 1) * vT(j, 1)
+        !    enddo
+        !enddo
+
     enddo
     call cpu_time(finish)
     print *, finish - start
 
     !QQT = MATMUL(Q, TRANSPOSE(Q))
     newA = MATMUL(Q, R)
+
+    !print *, A
+    !print *, QQT
+    !print *, newA
 
     print *, error_of_qr(A, newA, n)
 end

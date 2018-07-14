@@ -12,69 +12,69 @@ typedef double* matrix;
 
 matrix create(size_t m, size_t n)
 {
-	matrix mat;
+    matrix mat;
 
-	mat = malloc(m * n * sizeof(double));
-	for(size_t i = 0; i < m*n; ++i)
-	{
+    mat = malloc(m * n * sizeof(double));
+    for(size_t i = 0; i < m*n; ++i)
+    {
         mat[i] = 0;
-	}
+    }
 
-	return mat;
+    return mat;
 }
 
 matrix copy_matrix(const matrix A, size_t m, size_t n)
 {
     matrix mat;
-	mat = malloc(m * n * sizeof(double));
+    mat = malloc(m * n * sizeof(double));
 
-	for(size_t i = 0; i < m*n; ++i)
-	{
-		mat[i] = A[i];
-	}
+    for(size_t i = 0; i < m*n; ++i)
+    {
+        mat[i] = A[i];
+    }
 
-	return mat;
+    return mat;
 
 }
 
 matrix create_rand_matrix(size_t m, size_t n)
 {
-	matrix mat;
+    matrix mat;
 
     srand(time(0));
 
-	mat = malloc(m * n * sizeof(double));
-	for(size_t i = 0; i < m*n; ++i)
-	{
-		mat[i] = (double) rand() / RAND_MAX;
-	}
+    mat = malloc(m * n * sizeof(double));
+    for(size_t i = 0; i < m*n; ++i)
+    {
+        mat[i] = (double) rand() / RAND_MAX;
+    }
 
-	return mat;
+    return mat;
 }
 
 void print_matrix(const matrix mat, size_t m, size_t n)
 {
-	for(size_t i = 0; i < m; ++i)
-	{
-		for(size_t j = 0; j < n; ++j)
-			printf("%lf ", mat[i*n + j]);
-		printf("\n");
-	}
+    for(size_t i = 0; i < m; ++i)
+    {
+        for(size_t j = 0; j < n; ++j)
+            printf("%lf ", mat[i*n + j]);
+        printf("\n");
+    }
 }
 
 matrix create_I(size_t m, size_t n)
 {
     matrix matrix2;
 
- 	matrix2 = malloc(m * n * sizeof(double));
-	for(size_t i = 0; i < m; ++i)
-	{
-		for(size_t j = 0; j < n; ++j)
-			if (i == j)
+    matrix2 = malloc(m * n * sizeof(double));
+    for(size_t i = 0; i < m; ++i)
+    {
+        for(size_t j = 0; j < n; ++j)
+            if (i == j)
                 matrix2[i*n + j] = 1;
             else
                 matrix2[i*n + j] = 0;
-	}
+    }
 
     return matrix2;
 }
@@ -83,11 +83,11 @@ matrix create_O(size_t m, size_t n)
 {
     matrix mat;
 
- 	mat = malloc(m * n * sizeof(double));
-	for(size_t i = 0; i < m*n; ++i)
-	{
+    mat = malloc(m * n * sizeof(double));
+    for(size_t i = 0; i < m*n; ++i)
+    {
         mat[i] = 0;
-	}
+    }
 
     return mat;
 }
@@ -109,10 +109,10 @@ double error_of_qr(const matrix A, const matrix newA, size_t n)
 
 matrix* QRdecomposition(const matrix A, size_t N)
 {
-	matrix* QR = malloc( 2 * sizeof(matrix));
+    matrix* QR = malloc( 2 * sizeof(matrix));
 
     double *vT, *vrT, *vq;
-	vT = malloc(N * sizeof(double));
+    vT = malloc(N * sizeof(double));
     vrT = malloc(N * sizeof(double));
     vq = malloc(N * sizeof(double));
 
@@ -122,11 +122,11 @@ matrix* QRdecomposition(const matrix A, size_t N)
     P = create_O(N, N);
 
     // A = Q*R
-	// P = I - (2/vT*v) * v*vT - householder matrix, v - householder
+    // P = I - (2/vT*v) * v*vT - householder matrix, v - householder
     // Pn*Pn-1*...*P1*A = R
     // P1*P2*...*Pn = Q
     for(size_t k = 0; k < N; ++k)
-	{
+    {
         size_t size;
         size = N - k;
         for(size_t i = 0; i < size; ++i)
@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
     size = 2048;
 
     matrix A;
-	A = create_rand_matrix(size, size);
+    A = create_rand_matrix(size, size);
 
     // QR - decomposition
     matrix* QR;
@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
     free(QR[1]);
     free(QR);
 
-	return 0;
+    return 0;
 }
 
 

@@ -23,7 +23,7 @@ program main
    
     call cpu_time(start)
     ! A = Q*R
-	! P = I - (2/vT*v) * v*vT - householder matrix, v - householder
+    ! P = I - (2/vT*v) * v*vT - householder matrix, v - householder
     ! Pn*Pn-1*...*P1*A = R
     ! P1*P2*...*Pn = Q
     do k = 1, n
@@ -43,23 +43,23 @@ program main
             vT(1, 1) = vT(1, 1) - w1
         endif
 
-		! Compute vrT = vT * R and compute w2 = (v, v)      
+        ! Compute vrT = vT * R and compute w2 = (v, v)      
         call dgemv('T', siz, siz, 1d0, R(k, k), n, vT, 1, 0d0, vrT, 1)
         w2 = ddot(siz, vT, 1, vT, 1)
 
-		!Compute vq = Q * v
+        !Compute vq = Q * v
         call dgemv('N', n, siz, 1d0, Q(1, k), n, vT, 1, 0d0, vq, 1)
 
         ! Compute w2 = 2/(v, v)
         w2 = 2.0 / w2
-		
-		! Compute new R = R - w2(v * vrT)
+        
+        ! Compute new R = R - w2(v * vrT)
         !call dgemm('N', 'T', siz, siz, 1, -w2, vT, n, vrT, n, 1d0, R(k, k), n)
-		call dger(siz, siz, -w2, vT, 1, vrT, 1, R, n)		
+        call dger(siz, siz, -w2, vT, 1, vrT, 1, R, n)		
 
-		! Compute new Q = Q - w2(vq * vT)
+        ! Compute new Q = Q - w2(vq * vT)
         !call dgemm('N', 'T', n, siz, 1, -w2, vq, n, vT, n, 1d0, Q(1, k), n)
-		call dger(n, siz, -w2, vq, 1, vT, 1, Q, n)
+        call dger(n, siz, -w2, vq, 1, vT, 1, Q, n)
 
     enddo
     call cpu_time(finish)
